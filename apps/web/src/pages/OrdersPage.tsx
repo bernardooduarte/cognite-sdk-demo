@@ -1,11 +1,17 @@
 import { useEffect, useState } from 'react'
 import {
-  Container, Typography, Table, TableBody, TableCell,
-  TableContainer, TableHead, TableRow, Paper, Chip, CircularProgress, Alert,
+  Container, Table, TableBody, TableCell,
+  TableContainer, TableHead, TableRow, Paper, Chip, Alert,
 } from '@mui/material'
+import ReceiptLongOutlinedIcon from '@mui/icons-material/ReceiptLongOutlined'
 import { useDataSource } from '../DataSourceContext'
 import { fetchOrders } from '../api'
 import type { Order } from '../types'
+import { PageHeader } from '../components/PageHeader'
+import { TableSkeleton } from '../components/TableSkeleton'
+import { EmptyState } from '../components/EmptyState'
+
+const COLUMN_COUNT = 6
 
 const statusColor: Record<string, 'default' | 'warning' | 'info' | 'success'> = {
   pending: 'warning',
@@ -30,12 +36,18 @@ export function OrdersPage() {
   }, [source])
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
-      <Typography variant="h4" gutterBottom>Orders</Typography>
-      {loading && <CircularProgress />}
-      {error && <Alert severity="error">{error}</Alert>}
-      {!loading && !error && (
-        <TableContainer component={Paper}>
+    <Container maxWidth="lg" sx={{ py: { xs: 3, sm: 4 } }}>
+      <PageHeader
+        title="Orders"
+        subtitle="Pedidos registrados na Cognite Data Fusion."
+      />
+      {error && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {error}
+        </Alert>
+      )}
+      {!error && (
+        <TableContainer component={Paper} variant="outlined">
           <Table>
             <TableHead>
               <TableRow>
@@ -47,18 +59,33 @@ export function OrdersPage() {
                 <TableCell>Date</TableCell>
               </TableRow>
             </TableHead>
-            <TableBody>
-              {orders.map((o) => (
-                <TableRow key={o.externalId} hover>
-                  <TableCell sx={{ fontFamily: 'ui-monospace, Consolas, monospace' }}>{o.externalId}</TableCell>
-                  <TableCell>{o.metadata?.clientId}</TableCell>
-                  <TableCell>{o.metadata?.materialId}</TableCell>
-                  <TableCell>{o.metadata?.quantity}</TableCell>
-                  <TableCell>{o.subtype && <Chip label={o.subtype} size="small" color={statusColor[o.subtype]} />}</TableCell>
-                  <TableCell>{o.startTime && new Date(o.startTime).toLocaleDateString()}</TableCell>
+            {loading ? (
+              <TableSkeleton columns={COLUMN_COUNT} />
+            ) : orders.length === 0 ? (
+              <TableBody>
+                <TableRow>
+                  <TableCell colSpan={COLUMN_COUNT} sx={{ border: 0 }}>
+                    <EmptyState
+                      message="Nenhum pedido encontrado"
+                      icon={<ReceiptLongOutlinedIcon sx={{ fontSize: 48, mb: 1.5, opacity: 0.5 }} />}
+                    />
+                  </TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
+              </TableBody>
+            ) : (
+              <TableBody>
+                {orders.map((o) => (
+                  <TableRow key={o.externalId} hover>
+                    <TableCell sx={{ fontFamily: 'ui-monospace, Consolas, monospace' }}>{o.externalId}</TableCell>
+                    <TableCell>{o.metadata?.clientId}</TableCell>
+                    <TableCell>{o.metadata?.materialId}</TableCell>
+                    <TableCell>{o.metadata?.quantity}</TableCell>
+                    <TableCell>{o.subtype && <Chip label={o.subtype} size="small" color={statusColor[o.subtype]} />}</TableCell>
+                    <TableCell>{o.startTime && new Date(o.startTime).toLocaleDateString()}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            )}
           </Table>
         </TableContainer>
       )}

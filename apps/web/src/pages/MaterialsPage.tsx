@@ -1,11 +1,17 @@
 import { useEffect, useState } from 'react'
 import {
-  Container, Typography, Table, TableBody, TableCell,
-  TableContainer, TableHead, TableRow, Paper, Chip, CircularProgress, Alert,
+  Container, Table, TableBody, TableCell,
+  TableContainer, TableHead, TableRow, Paper, Chip, Alert,
 } from '@mui/material'
+import Inventory2OutlinedIcon from '@mui/icons-material/Inventory2Outlined'
 import { useDataSource } from '../DataSourceContext'
 import { fetchMaterials } from '../api'
 import type { Material } from '../types'
+import { PageHeader } from '../components/PageHeader'
+import { TableSkeleton } from '../components/TableSkeleton'
+import { EmptyState } from '../components/EmptyState'
+
+const COLUMN_COUNT = 5
 
 export function MaterialsPage() {
   const { source } = useDataSource()
@@ -23,12 +29,18 @@ export function MaterialsPage() {
   }, [source])
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
-      <Typography variant="h4" gutterBottom>Materials</Typography>
-      {loading && <CircularProgress />}
-      {error && <Alert severity="error">{error}</Alert>}
-      {!loading && !error && (
-        <TableContainer component={Paper}>
+    <Container maxWidth="lg" sx={{ py: { xs: 3, sm: 4 } }}>
+      <PageHeader
+        title="Materials"
+        subtitle="Catálogo de materiais cadastrados na Cognite Data Fusion."
+      />
+      {error && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {error}
+        </Alert>
+      )}
+      {!error && (
+        <TableContainer component={Paper} variant="outlined">
           <Table>
             <TableHead>
               <TableRow>
@@ -39,17 +51,32 @@ export function MaterialsPage() {
                 <TableCell>Unit</TableCell>
               </TableRow>
             </TableHead>
-            <TableBody>
-              {materials.map((m) => (
-                <TableRow key={m.externalId} hover>
-                  <TableCell sx={{ fontFamily: 'ui-monospace, Consolas, monospace' }}>{m.externalId}</TableCell>
-                  <TableCell>{m.name}</TableCell>
-                  <TableCell>{m.description}</TableCell>
-                  <TableCell>{m.metadata?.category && <Chip label={m.metadata.category} size="small" />}</TableCell>
-                  <TableCell>{m.metadata?.unit}</TableCell>
+            {loading ? (
+              <TableSkeleton columns={COLUMN_COUNT} />
+            ) : materials.length === 0 ? (
+              <TableBody>
+                <TableRow>
+                  <TableCell colSpan={COLUMN_COUNT} sx={{ border: 0 }}>
+                    <EmptyState
+                      message="Nenhum material encontrado"
+                      icon={<Inventory2OutlinedIcon sx={{ fontSize: 48, mb: 1.5, opacity: 0.5 }} />}
+                    />
+                  </TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
+              </TableBody>
+            ) : (
+              <TableBody>
+                {materials.map((m) => (
+                  <TableRow key={m.externalId} hover>
+                    <TableCell sx={{ fontFamily: 'ui-monospace, Consolas, monospace' }}>{m.externalId}</TableCell>
+                    <TableCell>{m.name}</TableCell>
+                    <TableCell>{m.description}</TableCell>
+                    <TableCell>{m.metadata?.category && <Chip label={m.metadata.category} size="small" />}</TableCell>
+                    <TableCell>{m.metadata?.unit}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            )}
           </Table>
         </TableContainer>
       )}

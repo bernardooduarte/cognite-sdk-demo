@@ -13,9 +13,9 @@ def get_materials():
     if USE_REAL_CDF:
         return _get_client().assets.list(limit=5)
     return [
-        AssetWrite(external_id="MAT-001", name='Steel Pipe 6"', description="Piping material", metadata={"category": "Piping", "unit": "meter"}),
+        AssetWrite(external_id="MAT-001", name='Steel Pipe 6', description="Piping material", metadata={"category": "Piping", "unit": "meter"}),
         AssetWrite(external_id="MAT-002", name="Carbon Steel Flange", description="Fitting material", metadata={"category": "Fittings", "unit": "unit"}),
-        AssetWrite(external_id="MAT-003", name='Industrial Valve 4"', description="Valve material", metadata={"category": "Valves", "unit": "unit"}),
+        AssetWrite(external_id="MAT-003", name='Industrial Valve 4', description="Valve material", metadata={"category": "Valves", "unit": "unit"}),
         AssetWrite(external_id="MAT-004", name="Insulation Foam", description="Insulation material", metadata={"category": "Insulation", "unit": "kg"}),
         AssetWrite(external_id="MAT-005", name="Welding Electrode E6013", description="Consumable material", metadata={"category": "Consumables", "unit": "kg"}),
     ]

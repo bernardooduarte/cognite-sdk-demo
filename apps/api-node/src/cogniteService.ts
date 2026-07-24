@@ -19,9 +19,9 @@ export async function getMaterials(): Promise<ExternalAssetItem[]> {
     return res.items
   }
   return [
-    { externalId: 'MAT-001', name: 'Steel Pipe 6"', description: 'Piping material', metadata: { category: 'Piping', unit: 'meter' } },
+    { externalId: 'MAT-001', name: 'Steel Pipe 6', description: 'Piping material', metadata: { category: 'Piping', unit: 'meter' } },
     { externalId: 'MAT-002', name: 'Carbon Steel Flange', description: 'Fitting material', metadata: { category: 'Fittings', unit: 'unit' } },
-    { externalId: 'MAT-003', name: 'Industrial Valve 4"', description: 'Valve material', metadata: { category: 'Valves', unit: 'unit' } },
+    { externalId: 'MAT-003', name: 'Industrial Valve 4', description: 'Valve material', metadata: { category: 'Valves', unit: 'unit' } },
     { externalId: 'MAT-004', name: 'Insulation Foam', description: 'Insulation material', metadata: { category: 'Insulation', unit: 'kg' } },
     { externalId: 'MAT-005', name: 'Welding Electrode E6013', description: 'Consumable material', metadata: { category: 'Consumables', unit: 'kg' } },
   ]
