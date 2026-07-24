@@ -82,4 +82,4 @@ Then open `http://localhost:5173` and flip the toggle between the Python SDK and
 
 ## Live demo
 
-[link coming after deploy]
+[[link coming after deploy]](https://cdf-demo-web.vercel.app/)
