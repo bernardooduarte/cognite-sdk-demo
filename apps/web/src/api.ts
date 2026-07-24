@@ -1,8 +1,8 @@
 import type { DataSource, Material, ClientTimeSeries, Order } from './types'
 
 const BASE_URLS: Record<DataSource, string> = {
-  python: 'http://localhost:8000',
-  javascript: 'http://localhost:4001',
+  python: import.meta.env.VITE_API_PYTHON_URL ?? 'http://localhost:8000',
+  javascript: import.meta.env.VITE_API_JS_URL ?? 'http://localhost:4001',
 }
 
 async function getJson<T>(source: DataSource, path: string): Promise<T> {
